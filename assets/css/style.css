@@ -1,0 +1,1305 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/*La fuente especial para las personas con dislexia debes descargarla de la página que la diseñó por lo que la almaceno en el proyecto y la añado con este código*/
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("../fonts/OpenDyslexic-Bold.otf") format("opentype");
+}
+/*Medida de adaptación para limitar el uso de animaciones y transiciones para sistemas operativos cuyos usuarios lo hayan marcado así. El uso del important aquí hace que prevalezca por encima de cualquier opción que usemos*/
+@media screen and (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+/*Establecemos los criterios de impresión de las páginas para un tamaño A4, con margen de 2cm por todos los lados y eliminando los videos e imagenes. Esta forma es más accesible y la suelen usar las personas con problemas de concentración o disléxicos*/
+@media print {
+  @page {
+    size: A4;
+    margin: 2cm;
+    counter-increment: page;
+  }
+  img {
+    display: none;
+  }
+  video {
+    display: none;
+  }
+  article.bocadillo {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+  }
+}
+/*Establecemos las variables con las que vamos a trabajar de manera que si hacemos algún cambio en ellas afectará a todo el documento*/
+:root {
+  --color: #1e1c1c;
+  --color-no: #fcf7f7;
+  --color-font-white: #fff;
+  --color-font-black: #080000;
+  --color-contacto: #6f217f;
+  --font-family-primary: "Atkinson Hyperlegible", sans-serif;
+  --font-family-secundary: "Cinzel Decorative", cursive;
+  --font-family-dislexia: "OpenDyslexic";
+  --font-size-mini: 0.6rem;
+  --font-size-neutral: 1rem;
+  --font-size-primary: 3rem;
+  --font-size-secundary: 1.8rem;
+  --font-size-third: 0.8rem;
+  --background-color-black: #1e1c1c;
+  --background-color-black-header: rgba(30, 28, 28, 0.5);
+  --background-color-white: #fff;
+  --background-color-neo: #fcf7f7;
+  --background-hundido: linear-gradient(145deg, #e3dede, #e8e8e8);
+  --box-shadow: 0.02rem 0.02rem 0.6rem #d6d2d2, -0.5rem -0.5rem 0.2rem #e8e8e8;
+  --box-shadow-focus: inset 1rem 1rem 2rem #d6d2d2,
+    inset 0.05rem 0.05rem 0.6rem #ffffff;
+  --box-shadow-no: inset 1rem 1rem 2rem rgba(60, 55, 55, 0.5),
+    inset -1rem -1rem 2rem #1e1c1c;
+  --box-shadow-hundido: inset 4px 4px 10px -1px rgba(0, 0, 0, 0.15),
+    inset -4px -4px 10px -1px rgba(255, 255, 255, 0.7);
+}
+/*Modificamos el movimiento al hacer scroll para que sea suave y nos deje visible las anclas*/
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 10rem; /*para que deje un padding por arriba al llegar al target*/
+}
+
+/*La letra principal que usaremos en la página web está diseñada por el instituto Braille para personas con problemas visuales y es accesible con la linea Braille*/
+body {
+  font-family: var(--font-family-primary);
+}
+
+/*Por motivos de accesibilidad para aquellas personas que utilicen el teclado le daremos la opción de saltarse el navegador por lo que en un principio el ancla del navegador la tendremos oculta y si está en foco la mostraremos para que la usen*/
+.salto-main {
+  position: absolute;
+  text-align: center;
+  padding: 0.2rem;
+  background: var(--background-color-neo);
+  box-shadow: var(--box-shadow);
+  color: var(--color);
+  font-weight: 400;
+  text-decoration: none;
+  left: -40rem;
+}
+
+.salto-main:focus {
+  top: 0.5rem;
+  left: 0;
+  transition: left 800ms ease;
+  border: solid 0.05em var(--color-font-black);
+}
+
+/*Hemos puesto anclas que favorecen que se suba al final de cada sección al navegador por si el usuario está utilizando el teclado y no puede usar el ratón, o para que baje a la siguiente sección cuando se encuentre dentro de las órdenes por si no las quiere leer*/
+.subir,
+.bajar {
+  width: max-content;
+  min-height: 2rem;
+  height: auto;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  text-decoration: none;
+  background: var(--background-color-neo);
+  color: var(--color);
+  margin: 1em;
+  border: solid 0.05em var(--color-font-black);
+  padding: 1em;
+  opacity: 0;
+  transition: opacity 1s ease-in;
+}
+/*Estará oculto de manera que cuando el foco recaiga sobre él se mostrará por completo y al dejar de ser el foco volverá a ocultarse así no molesta al resto de usuarios. Se usa en anclas para subir al navegador*/
+.subir:focus {
+  opacity: 1;
+  font-weight: 500;
+}
+.bajar:focus {
+  opacity: 1;
+  top: 0;
+  height: 2em;
+  font-weight: 500;
+  z-index: 99;
+}
+
+/*El header ocupará todo el viewport y estará fijo arriba ya que la página es larga y podrán en todo momento desplazarse por donde quieran*/
+header {
+  width: 100%;
+  min-height: 15vh;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+}
+
+header img#logo {
+  vertical-align: middle;
+  /* font-size: 2em;
+  font-family: var(--font-family-secundary);
+  color: var(--color);
+  margin-right: 3em;
+  font-weight: 700;*/
+  width: 8em;
+  height: auto;
+}
+
+/*Navegador principal con submenús a los que daré formato para que se despliegue el primer menú en horizontal y el segundo en vertical de esa manera se verá también la versión móvil y no habrá que hacer un menú aparatoso para mayores que no lo entenderían*/
+nav {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+nav ul li {
+  font-size: var(--font-size-secundary);
+  float: left;
+  font-size: var(--font-size-secundary);
+  position: relative; /*para posicionar la lista de su interior*/
+  padding: 0.5em;
+  text-align: center;
+  font-weight: 600;
+}
+nav ul li:hover {
+  box-shadow: var(--box-shadow-hundido);
+  border: solid 0.05em var(--color-font-black);
+}
+nav ul li a {
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  text-decoration: none;
+}
+nav ul ul {
+  display: none; /*para que este oculto*/
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  width: auto;
+  min-width: 15vw;
+  padding: 0.5em;
+  list-style: none; /*para quitar los cuadrados del list-item*/
+  z-index: 99; /*para que en tamaños de pantalla más pequeños se quede por encima del resto del nav*/
+}
+nav ul ul li {
+  width: auto;
+  min-width: 5vw;
+  float: none;
+  padding: 0.5em;
+  display: flex;
+}
+
+nav ul ul li a {
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  padding: 0.5em;
+  text-decoration: none;
+}
+
+nav ul li:hover > ul {
+  display: flex;
+}
+/*Le doy formato al último li del navegador para que se diferencia del resto que será el contacto de la página*/
+nav > ul > li:last-child {
+  font-size: var(--font-size-neutral);
+  color: var(--color-contacto);
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+}
+
+/*La página ocupará todo el ancho y esconderá si sobresale algo*/
+main {
+  width: 100%;
+  overflow: hidden;
+}
+/*Campo accesibilidad que vamos a esconder a la derecha y mostrar solo el icono de accesibilidad el cual mostrará la caja si es pulsado*/
+aside.contenedor-accesibilidad {
+  width: 40vw;
+  height: auto;
+  position: fixed;
+  background: var(--background-color-black);
+  right: -40vw;
+  /*distancia para que esté oculto a la vista*/
+  z-index: 99999;
+  color: var(--color-font-white);
+}
+/*Para trasladar la caja de accesibilidad cuando ésta este oculta debemos de jugar con el espacio que se desplaza y tener encuenta si estaba en foco o no antes de pulsarlo. Lo haremos convinando con javascript*/
+.contenedor-accesibilidad:focus-within > * {
+  transform: translateX(-100%);
+  background: var(--background-color-black);
+}
+/*Para trasladar el icono de accesibilidad cuando el foco se meta en la caja*/
+.contenedor-accesibilidad:focus-within > .boton-accesibilidad {
+  transform: translateX(-40vw);
+  background: var(--background-color-black);
+}
+/*Botón que será visible siempre y fijo en su posición para permitir a los usuarios acceder a cualquier modificación que quieran*/
+div.boton-accesibilidad {
+  background: var(--background-color-neo);
+  color: var(--color);
+  padding: 1.5rem;
+  background-image: url(../images/icons8-accesibilidad-80.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  left: -5rem;
+}
+
+.oculto {
+  display: none;
+}
+
+div.boton-accesibilidad a {
+  text-decoration: none;
+}
+
+/*Estilo para los elementos cuando se hace foco sobre ellos*/
+:focus-visible,
+h2:focus-visible,
+h3:focus-visible,
+div:focus-visible,
+button:focus-visible,
+input:focus-visible,
+a:focus-visible,
+.contenedor-accesibilidad li:hover {
+  outline: 5px solid var(--color-contacto);
+  background: var(--background-color-black-header) !important;
+  color: var(--color-no) !important;
+  box-shadow: var(--box-shadow-no);
+  padding: 0.5em;
+}
+.contenedor-accesibilidad li:hover a {
+  color: var(--color-no);
+  text-transform: uppercase; /*para que se pongan los a del navegador de accesibilidad web en mayúsculas*/
+}
+/*En la caja del aside hay una frase que encabeza las listas y la diferenciaremos con una linea por debajo*/
+aside p {
+  font-size: var(--font-size-neutral);
+  padding: 1em;
+  overflow: hidden;
+  position: relative;
+  padding: 0.5em;
+}
+
+aside p::after {
+  content: "";
+  border: 0.05em solid var(--color-font-white);
+  height: 0.1%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: var(--background-color-white);
+  transition: all 4s;
+}
+/*Estilo de las listas de la caja de accesibilidad*/
+aside ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: var(--font-size-third);
+  gap: 0.5em;
+  width: 100%;
+}
+
+aside ul li {
+  font-size: var(--font-size-neutral);
+  width: 100%;
+  padding: 0.8em;
+}
+/*Estilo del ultimo li que será para salir al navegador*/
+aside ul li:last-of-type {
+  background-color: var(--background-color-white);
+  color: var(--color-font-black);
+  width: 100%;
+}
+aside ul li:hover a {
+  color: var(--color-font-black);
+}
+
+/*Caja que contiene el video de inicio que mantendremos fija con el video y moveremos el encabezado a través de ella*/
+.primero {
+  overflow: hidden;
+  background-attachment: fixed;
+  width: 100vw;
+  overflow: hidden;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  top: 0;
+}
+
+h1 {
+  position: relative;
+  font-family: var(--font-family-secundary);
+  letter-spacing: 0.5em;
+  font-size: var(--font-size-primary);
+  background: var(--background-color-neo);
+  color: var(--color);
+  padding: 0.5em 0.5em 1em 0.5em;
+}
+
+video#v-background {
+  flex: 1;
+  min-width: 100%;
+  height: 90%;
+  left: 0;
+  top: 0; /*para que se vea en todos los tamaños*/
+  position: fixed;
+  z-index: -1;
+  object-fit: cover;
+}
+/*Creamos estilos de forma genérica ya que son comunes y luego añadiremos algún detalle en lo específico*/
+section {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+/*El contenedor de presentación de cada categoria tiene la misma clase por lo que el estilo es común*/
+section.insectos-container {
+  width: 100%;
+  height: 50vh;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+section.insectos-container article {
+  padding: 1em 2em;
+}
+
+/*Creo una animación de un div que lo convierto en círculo punteado*/
+div.circle {
+  position: relative;
+  width: 15rem;
+  height: 15rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-font-black);
+  border-style: dashed;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation-name: rodar;
+  animation-duration: 10s;
+  animation-delay: 0ms;
+  animation-iteration-count: infinite;
+  animation-fill-mode: initial;
+  animation-timing-function: linear;
+  /*para evitar la pausa del giro*/
+}
+/* con esta animación conseguimos que de inicio a final se vaya produciendo una rotación del borde punteado del círculo por lo que parece que está rotando*/
+@-webkit-keyframes rodar {
+  0% {
+    transform: rotate(0grad);
+  }
+
+  100% {
+    transform: rotate(360grad);
+  }
+}
+
+@keyframes rodar {
+  0% {
+    transform: rotate(0grad);
+  }
+
+  100% {
+    transform: rotate(360grad);
+  }
+}
+
+/*Para que el texto se quede dentro sin moverse debo meterlo en otro div de igual características pero sin animación y con posición absoluta para que se ponga encima de él*/
+.circle {
+  display: flex;
+  position: relative;
+}
+
+.title-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15rem;
+  height: 15rem;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.title-circle h2 {
+  font-weight: 100;
+  font-weight: 400;
+  color: var(--color);
+  font-size: var(--font-size-secundary);
+}
+
+.segundo {
+  position: relative;
+}
+
+p {
+  font-size: 2em;
+  font-weight: 100;
+  font-size: var(--font-size-neutral);
+}
+/*esta parte es la referente al texto que aparece al hacer hover sobre el círculo*/
+.insectos-container article.bocadillo {
+  position: relative;
+  visibility: hidden;
+  width: 0;
+  opacity: 0;
+  transition: width 4s, opacity 8s;
+}
+/*Al hacer hover sobre el círculo mostraremos el contenido explicativo del apartado*/
+.insectos-container:hover article.bocadillo {
+  visibility: visible;
+  width: 100%;
+  opacity: 1;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  font-size: var(--font-size-third);
+}
+/*aquí al hacer hover sobre el texto que sale al hacer hover sobre el círculo, creamos una línea en él*/
+.insectos-container:hover article.bocadillo:hover::after {
+  content: "";
+  border: 0.05em solid var(--color);
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  transition: all 4s;
+}
+
+/*sección del contenido descubre*/
+.container-card {
+  height: auto;
+  /*para que tenga la altura del contenido de los articles*/
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/*estilo común a muchas secciones que presentan imagenes*/
+.card {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  position: relative;
+  justify-content: flex-start;
+  align-items: center;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+}
+
+.card h2 {
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  width: 100%;
+  padding: 1em;
+  text-align: center;
+}
+/*ponemos una linea a los lados del título*/
+.card h2::after {
+  content: "";
+  background: var(--color);
+  box-shadow: var(--box-shadow);
+  height: 0.05%;
+  width: 20%;
+  position: absolute;
+  top: 1.5em;
+  left: 0;
+}
+
+.card h2::before {
+  content: "";
+  background: var(--color);
+  box-shadow: var(--box-shadow);
+  height: 0.05%;
+  width: 20%;
+  position: absolute;
+  top: 1.4em;
+  right: 0;
+}
+
+.card p {
+  text-align: center;
+  color: var(--color);
+  line-height: 1.5;
+  font-size: var(--font-size-secundary);
+  width: 100vw;
+  padding: 0.5em;
+  font-weight: 400;
+}
+
+p span {
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.card h3 {
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  font-size: var(--font-size-secundary);
+  text-align: center;
+  width: 100vw;
+  padding: 0.5em;
+  font-weight: 500;
+  position: relative;
+}
+
+.card h3 ~ p {
+  font-size: var(--font-size-secundary);
+  padding: 0.5em;
+  text-align: left;
+  color: var(--color);
+  font-weight: 400;
+}
+/*Damos estilo a todas las figure que contendrán las imagenes de manera responsive para que se vean en todos los tamaños de ordenador, tablet y móvil*/
+.card figure {
+  flex: 1;
+  min-width: 40vw;
+  min-height: 30em;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card figure img {
+  width: 80%;
+  height: 15rem;
+  border-radius: 10px;
+}
+
+.card figure figcaption {
+  background: var(--background-color-black);
+  width: 80%;
+  height: 50%;
+  margin: 0.5rem 0;
+  color: var(--color-font-white);
+  padding: 0.5em;
+  line-height: 1.5;
+  font-size: var(--font-size-neutral);
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+}
+
+.card figure figcaption span {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: var(--font-size-neutral);
+}
+
+img {
+  width: 100%;
+  /*si no lo pongo así deja un gap entre los figure*/
+  height: 100vh;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+figure h2 {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  font-weight: 700;
+}
+
+/*SECCION METAMORFOSIS*/
+.metamorfosis {
+  height: auto;
+  /*para que tenga la altura del contenido de los articles*/
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+}
+/*Al tener un estilo más diferenciado ya que contiene un vídeo lo hacemos específico*/
+.metamorfosis article.met,
+.metamorfosis article.met-2 {
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  flex-wrap: wrap;
+  min-height: 50vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background-repeat: no-repeat;
+}
+
+.metamorfosis article.met h2::after,
+.metamorfosis article.met-2 h2::after {
+  content: "";
+  background: var(--color);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  height: 0.05%;
+  width: 10%;
+  position: absolute;
+  top: 1.4em;
+  left: 0;
+}
+
+.metamorfosis article.met h2::before,
+.metamorfosis article.met-2 h2::before {
+  content: "";
+  background: var(--color);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  height: 0.05%;
+  width: 10%;
+  position: absolute;
+  top: 1.4em;
+  right: 0;
+}
+
+.metamorfosis video {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+/*MODIFICAR EL STYLE DEL SCRIPT DEL VIDEO PLYR que ya trae diseño por defecto*/
+.plyr {
+  width: 100%;
+  height: auto;
+}
+/*Al usar el estilo del script .plyr debo modificarlo para ponerlo adecuado a mi página en este caso quiero que ocupe el 60% de la anchura del video*/
+.plyr .plyr__controls {
+  max-width: 60vw;
+  margin: 0 auto;
+}
+/*Pongo un margen entre los controles*/
+.plyr .plyr__controls .plyr__control {
+  margin: 1em;
+}
+
+div.plyr__controls div.plyr__controls__item.plyr__progress__container {
+  margin-left: 1em;
+}
+
+/*SECCION CONOCE*/
+.conoce {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 150vh;
+  height: auto;
+  gap: 0.5em;
+  /*así evita que las secciones de abajo se ubiquen encima*/
+  position: relative;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+}
+.conoce article {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+}
+.conoce p {
+  text-align: center;
+  color: var(--color);
+  line-height: 1.5;
+  font-size: var(--font-size-secundary);
+  width: 100vw;
+  padding: 0.5em;
+  font-weight: 400;
+}
+.conoce h2 {
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  width: 100%;
+  padding: 1em;
+  text-align: center;
+}
+.conoce article h2::after {
+  content: "";
+  background: var(--color);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  height: 0.05%;
+  width: 10%;
+  position: absolute;
+  top: 1.4em;
+  left: 0;
+}
+.conoce article h2::before {
+  content: "";
+  background: var(--color);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  height: 0.05%;
+  width: 10%;
+  position: absolute;
+  top: 1.4em;
+  right: 0;
+}
+/*Ponemos estilo al div que contiene la galería de imágenes de los insectos en grid de manera responsive y que afecta a todos los dispositivos*/
+.conoce article > div {
+  width: 100%;
+  position: relative;
+  display: -ms-grid;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  grid-auto-rows: minmax(12em, 15em);
+  gap: 0.5em;
+}
+
+.conoce article figure {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+}
+
+.conoce article figure img {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+}
+
+.conoce article figure figcaption {
+  position: absolute;
+  background: var(--background-color-neo);
+  color: var(--color);
+  height: 25%;
+  width: 100%;
+  bottom: 0;
+  font-size: 1em;
+  padding: 1.5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.conoce article figure:hover,
+.conoce article figure:focus {
+  transform: scale(1.2);
+  z-index: 999;
+}
+
+.conoce article figure:hover figcaption,
+.conoce article figure:focus figcaption {
+  visibility: hidden;
+}
+
+figure p.description {
+  display: none;
+  opacity: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-mini);
+  background: var(--background-color-black-header);
+}
+/*Mostramos la explicación de la orden al hacer hover o focus sobre cada imagen para que no ocupe mas espacio visible dentro de la web*/
+figure:hover p.description,
+figure:focus p.description {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*  padding: 3.5em;*/
+  border-radius: 0.5rem;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  position: absolute;
+  transition: opacity 2s ease-in;
+}
+/*La única manera de hacer transition con el contenido es hacerlo en el hover del bloque cuando ya está en block*/
+figure:hover p.description:hover,
+figure:focus p.description {
+  opacity: 1;
+  color: var(--color-font-white);
+  font-size: var(--font-size-third);
+  padding: 0.5em 1.3em;
+}
+
+/*SECCION Identifica, por un lado colocamos una imagen a la izquierda y por el otro conectamos con la API de GBIF para obtener datos sobre las ordenes de insectos que tiene registradas*/
+
+.identifica {
+  width: 100%;
+  min-height: 50vh;
+  height: auto;
+  /*así evita que las secciones de abajo se ubiquen encima*/
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+}
+
+.identifica article {
+  flex: 1 2 auto;
+  min-height: 40vh;
+  height: auto;
+  min-width: 25%;
+  width: auto;
+  position: relative;
+  margin: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+}
+
+.mosca figure {
+  min-width: 70%;
+  height: auto;
+  object-fit: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mosca figure img {
+  width: 100%;
+  height: auto;
+}
+/*Damos mayor flexibilidad a la parte donde volcaremos los datos para que el tamaño se vaya ajustando a los datos que muestre ya que hemos solicitado también imágenes*/
+.busqueda form,
+.busqueda figure {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  margin: 0.5em;
+}
+.busqueda h2 {
+  font-weight: 700;
+  padding: 0.5em;
+}
+.busqueda label {
+  width: 20vw;
+}
+.busqueda span ul {
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  padding: 1em 2em;
+}
+.busqueda span ul li {
+  font-size: 0.8rem;
+  padding: 0.3em;
+  background: var(--background-color-neo);
+  color: var(--color);
+}
+
+.busqueda form {
+  margin: 3em;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+}
+
+.busqueda select,
+.busqueda label {
+  margin: 1em;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  padding: 1em;
+}
+
+.busqueda select {
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  border-radius: 5%;
+  padding: 0.5rem;
+}
+
+.busqueda figure {
+  width: 20vw;
+  height: auto;
+  object-fit: cover;
+  inset: 1em;
+}
+
+.busqueda figure img {
+  width: 100%;
+  height: 75%;
+  border-radius: 0.5rem;
+}
+
+.busqueda figure figcaption {
+  font-size: 0.5rem;
+  min-height: 2em;
+  height: auto;
+  color: var(--color);
+}
+/*SECCION Localiza. Aquí volvemos a conectar con la base de datos API para ubicar en un mapa donde se han registrado poblaciones de las especies seleccionadas*/
+.localiza {
+  width: 100%;
+  height: auto;
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+}
+label {
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  width: 50vw;
+  height: 10vh;
+  padding: 0.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-size-neutral);
+}
+.selection {
+  min-height: 25vh;
+  height: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding-left: 3em;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+}
+
+.selection select {
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  border-radius: 5%;
+  padding: 0.5rem;
+  width: 30vw;
+}
+/*Para dar un tamaño al mapa que se mostrará*/
+.imageMap {
+  height: 50vh;
+  width: 100%;
+}
+
+.imageMap figure {
+  height: 100%;
+  width: 100%;
+  z-index: 999;
+}
+/*SECCION footer donde pondremos nuestro contacto así como las validaciones de calidad en el código que hemos conseguido*/
+footer {
+  width: 100%;
+  min-height: 35vh;
+  height: auto;
+  background: var(--background-color-neo);
+  color: var(--color);
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+footer .pie {
+  width: 60vw;
+  min-height: 20vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background: var(--background-color-neo);
+  color: var(--color);
+  font-size: var(--font-size-neutral);
+  padding: 0.6em;
+  position: relative;
+}
+
+footer .pie img {
+  height: auto;
+  width: 10vw;
+  object-fit: cover;
+  margin: 0.05em;
+}
+footer .pie-accesibilidad {
+  width: 35vw;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  color: var(--color);
+  font-size: var(--font-size-neutral);
+  position: relative;
+}
+footer h3 {
+  width: 100%;
+  height: 5vh;
+  padding: 1em;
+  margin-bottom: 1.5em;
+  color: var(--color);
+  top: 1em;
+  left: 1em;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+}
+.pie-accesibilidad img {
+  height: auto;
+  width: 8vw;
+  object-fit: cover;
+  margin: 1em;
+}
+footer .pie-copyright {
+  background: var(--background-color-black);
+  color: var(--color-font-white);
+  font-size: var(--font-size-mini);
+  padding: 0.05em;
+  width: 100vw;
+  min-height: 5vw;
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em;
+}
+.pie-copyright a,
+.pie-copyright p {
+  color: var(--color-font-white);
+  font-size: var(--font-size-neutral);
+}
+.pie-copyright a {
+  margin-left: 2em;
+  text-decoration: none;
+}
+footer time {
+  font-size: var(--font-size-third);
+  background: var(--background-color-neo);
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  padding: 0.5em;
+  min-height: 3vh;
+  height: auto;
+}
+
+/*MODIFICACIONES PARA TAMAÑO MOVIL ya que aunque hayamos hecho un estilo fluid que no necesita retoques de @media en algunos aspectos si debemos ajustar el tamaño móvil. En este caso el móvil es el último en ser diseñado ya que por probabilidad de uso este será mayor en pantallas de ordenador por las características de los usuario que queremos cubrir*/
+@media (max-width: 599px) {
+  #navegador li a {
+    font-size: var(--font-size-neutral);
+  }
+  /*para que en el móvil se vea la última fila en columna*/
+  #navegador ul ul li:hover ul {
+    display: flex;
+    flex-direction: column;
+  }
+  #navegador ul ul ul li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /*Zona video ya que queda la caja muy libre en su section*/
+  .primero {
+    width: 100%;
+    height: 50vh;
+    top: 0;
+  }
+  h1 {
+    font-size: var(--font-size-secundary);
+    top: -10vh;
+  }
+  video#v-background {
+    width: 100%;
+    height: 100%;
+  }
+  /*Zona circulos para que se vea por completo sin hacer hover y sea legible*/
+  .insectos-container {
+    flex-wrap: wrap;
+  }
+  div.circle {
+    width: 11em;
+    height: 11em;
+    border-radius: 50%;
+    border: 2px solid var(--color-font-black);
+    border-style: dashed;
+    background: var(--background-color-neo);
+    color: var(--color);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation-name: rodar;
+    animation-duration: 10s;
+    animation-delay: 0ms;
+    animation-iteration-count: infinite;
+    animation-fill-mode: initial;
+    animation-timing-function: linear;
+    /*para evitar la pausa*/
+  }
+
+  @-webkit-keyframes rodar {
+    0% {
+      transform: rotate(0grad);
+    }
+
+    100% {
+      transform: rotate(360grad);
+    }
+  }
+
+  @keyframes rodar {
+    0% {
+      transform: rotate(0grad);
+    }
+
+    100% {
+      transform: rotate(360grad);
+    }
+  }
+
+  /*Para que el texto se quede dentro sin moverse debo meterlo en otro div de igual características pero sin animación y con posición absoluta para que se ponga encima de él*/
+  article.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .circle {
+    width: 100vw;
+    display: flex;
+    position: relative;
+  }
+
+  .title-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 11em;
+    height: 11em;
+    border-radius: 50%;
+    position: absolute;
+  }
+
+  .title-circle h2 {
+    font-weight: 100;
+    font-weight: 400;
+    color: var(--color);
+    font-size: var(--font-size-secundary);
+  }
+
+  p {
+    font-size: var(--font-size-neutral);
+    font-weight: 100;
+  }
+
+  .insectos-container article.bocadillo {
+    visibility: visible;
+    width: 100vw;
+    opacity: 1;
+    background: var(--background-color-neo);
+    color: var(--color);
+    box-shadow: var(--box-shadow);
+    font-size: var(--font-size-third);
+    padding: 0.5em;
+  }
+  /*Video metamorfosis para que quede bien su tamaño en formato móvil*/
+  .plyr .plyr__controls {
+    width: 100vw;
+    margin: 0 auto;
+  }
+  .plyr .plyr__controls .plyr__control {
+    margin: 0;
+  }
+
+  div.plyr__controls div.plyr__controls__item.plyr__progress__container {
+    margin-left: 0;
+  }
+}
