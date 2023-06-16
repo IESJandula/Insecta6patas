@@ -49,12 +49,7 @@ require_once 'bd.php';
         <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
     </head>
     <body>
-        <!--Si los usuarios tiene deshabilitado Javascript lo redireccionamos a esta página que le mostrará contenido obtenido de la base de datos
-        relacional con php, el 0 indica que se hará en los 0s tras la recarga de la página-->
-        <noscript role="complementary">
-        <p>Su navegador no permite usar javascript. Para poder acceder a la información de manera correcta refresque la página.</p>
-        <meta http-equiv="refresh" content="0;url='accesible.php'">
-        </noscript>
+        
         <header>
             <!--Hay personas que navegan con el teclado y les resulta engorroso los navegadores así los evitamos-->
             <a class="salto-main" href="#salta" id="salto" tabindex="1" aria-label="Si pulsas aquí saltas la navegación principal" aria-controls="salta">Salta la navegación</a>
@@ -120,10 +115,7 @@ require_once 'bd.php';
                     </li>
                     <li><a href="#conoce_insectos" tabindex="1" aria-controls="conoce_insectos"
                            aria-label="Ir a la seccion conoce">Conoce</a></li>
-                    <li><a href="#identifica_insectos" tabindex="1" aria-controls="identifica_insectos"
-                           aria-label="Ir a la seccion identifica">Identifica</a></li>
-                    <li><a href="#localiza_insectos" tabindex="1" aria-controls="localiza_insectos"
-                           aria-label="Ir a la seccion localiza">Localiza</a></li>
+                    
                     <li><a href="#informacion_contacto" tabindex="1" aria-controls="informacion_contacto"
                            aria-label="Ir a la seccion Contacto">Contacto</a></li>
                 </ul>
@@ -679,7 +671,7 @@ if ($ordenes === false) {
                 <p aria-label="Derechos de autor de la página">@Insecta 6Patas. Todos los derechos reservados</p>
                 <a href="assets/documentation/politica_cookies.pdf" tabindex="10">Políticas de Cookies (PDF 32KB)</a>
                 <a href="assets/documentation/politica_privacidad.pdf" tabindex="10">Terminos y condiciones (PDF 90KB)</a> 
-                <a href="assets/documentation/declaracion_accesibilidad.pdf" tabindex="10">Accesibilidad</a>
+                <a href="assets/documentation/declaracion-accesibilidad.pdf" tabindex="10">Accesibilidad</a>
             </div>
             <!--Es un criterio accesible fechar con el día de la última revisión-->
             <time datetime="2023-06-06"> Actualizado a: 6 de junio de 2023</time>
