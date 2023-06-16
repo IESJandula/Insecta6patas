@@ -750,7 +750,7 @@ if ($ordenes === false) {
                 <p aria-label="Derechos de autor de la página">@Insecta 6Patas. Todos los derechos reservados</p>
                 <a href="assets/documentation/politica_cookies.pdf" tabindex="10">Políticas de Cookies (PDF 32KB)</a>
                 <a href="assets/documentation/politica_privacidad.pdf" tabindex="10">Terminos y condiciones (PDF 90KB)</a> 
-                <a href="assets/documentation/declaracion_accesibilidad.pdf" tabindex="10">Accesibilidad</a>
+                <a href="assets/documentation/declaracion-accesibilidad.pdf" tabindex="10">Accesibilidad (PDF 67KB)</a>
             </div>
             <!--Es un criterio accesible fechar con el día de la última revisión-->
             <time datetime="2023-06-06"> Actualizado a: 6 de junio de 2023</time>
